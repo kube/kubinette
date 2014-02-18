@@ -1,10 +1,13 @@
 /*
-**	File Parser
+**	Check Arguments
 */
 
-var validArgs		= ["--help", "--version", "--visual"];
+var validArgs		= ["--help", "--version", "--visual", "--detailed", "-d", "-v", "-h"];
 var checkedArgs		= new Array();
 var argsFunctions	= new Array();
+
+
+// Functions
 
 argsFunctions["--help"] = function()
 {
@@ -17,6 +20,19 @@ argsFunctions["--visual"] = function()
 	console.log("Enable Visual Mode");
 	kubinette.visualMode = 1;
 };
+
+argsFunctions["--detailed"] = function()
+{
+	console.log("Enable Detailed Mode");
+	kubinette.detailedMode = 1;
+};
+
+
+// Aliases
+
+argsFunctions["-d"] = argsFunctions["--detailed"];
+argsFunctions["-v"] = argsFunctions["--visual"];
+argsFunctions["-h"] = argsFunctions["--help"]; 
 
 function			isArgument(argument)
 {
