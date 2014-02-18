@@ -7,7 +7,7 @@ function	checkFunction(name, data, i, fileInfo)
 	// This Regex still doesn't match functions as parameters
 	var isFunctionRegex = /^([\t\s]*)([0-9a-zA-Z_]+ )?([0-9a-zA-Z_]+)([\t\s]+)(\**)([\t\s]+)?([0-9a-zA-Z_]+)\(((([0-9a-zA-Z_]+ )?([0-9a-zA-Z_]+)([\t\s]+)?(\**)([\t\s]+)?([0-9a-zA-Z_]+)(?:, ))*(([0-9a-zA-Z_]+ )?([0-9a-zA-Z_]+)([\t\s]+)?(\**)([\t\s]+)?([0-9a-zA-Z_]+)))?\)[\t\s]*(?!;)(?:{)?/mgi;
 
-	// var argFunctionRegex = /[0-9a-zA-Z_]+[\t\s]*\*?\(\*?[0-9a-zA-Z_]+[\t\s]*\)\((([0-9a-zA-Z_]+)[\t\s]+(\**)([\t\s]*)([0-9a-zA-Z_]+),)*[\t\s]([0-9a-zA-Z_]+)([\t\s]+)(\**)([0-9a-zA-Z_]+)\)/mgi;
+	var argFunctionRegex = /[0-9a-zA-Z_]+[\t\s]*\*?\(\*?[0-9a-zA-Z_]+[\t\s]*\)\((([0-9a-zA-Z_]+)[\t\s]+(\**)([\t\s]*)([0-9a-zA-Z_]+),)*[\t\s]([0-9a-zA-Z_]+)([\t\s]+)(\**)([0-9a-zA-Z_]+)\)/mgi;
 
 	var isFunction = data[i].match(isFunctionRegex);
 	// Should check umcompleteFunctionPrototypeRegex FIRST!
@@ -59,7 +59,7 @@ function	checkEndFileReturn(data, i, fileInfo)
 	if (!endFileReturn)
 	{
 		fileInfo.errorsCount++;
-		console.error(colors.error + "Missing carriage return at end of file" + colors.reset);
+		fileInfo.errorsLog += colors.error + "Missing carriage return at end of file" + colors.reset;
 	}
 }
 
@@ -86,6 +86,7 @@ function	parseFile(name, data)
 	var	fileInfo = new Array();
 	fileInfo.functionsCount = 0;
 	fileInfo.errorsCount = 0;
+	fileInfo.errorsLog = new String;
 
 	for (var i in data)
 	{
