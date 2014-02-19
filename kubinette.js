@@ -28,10 +28,10 @@ kubinette.loadFile = function(fileName)
 	catch (e)
 	{
 		if (e.code === 'ENOENT')
-			console.log(colors.error + "Error! "
+			console.log(colors.error + "ERROR! "
 				+ colors.reset + fileName + " does not exist!");
 		else if (e.code === 'EACCES')
-			console.log(colors.error + "Error! "
+			console.log(colors.error + "ERROR! "
 				+ colors.reset + "No permission to access " + fileName);
 		else
 			throw e;
