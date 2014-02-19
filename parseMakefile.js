@@ -10,11 +10,9 @@ var parseMakefile = function(callback)
 	{
 		var sourcesFiles = stdout.match(getFilesRegex);
 		if (error !== null)
-		{
-			console.log('exec error: ' + error);
-		}
+			console.log(colors.error + "ERROR: Cannot find a Makefile." + colors.reset);
 		for (var i in sourcesFiles)
-			kubinette.loadFile(sourcesFiles[i]);	
+			kubinette.loadFile(sourcesFiles[i]);
 	});
 }
 

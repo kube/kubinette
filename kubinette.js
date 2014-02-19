@@ -12,12 +12,14 @@ kubinette.parseFile 	= require("./parseFile.js");
 kubinette.parseMakefile	= require("./parseMakefile.js");
 
 kubinette.displayHeader();
+kubinette.parsedFiles = new Array();
 
 kubinette.loadFile = function(fileName)
 {
 	// Dirty way
-	if (fileName == "")
+	if (fileName == "" || kubinette.parsedFiles[fileName] == 1)
 		return ;
+	kubinette.parsedFiles[fileName] = 1;
 	try
 	{
 		data = fs.readFileSync(fileName, 'utf8');
@@ -27,7 +29,7 @@ kubinette.loadFile = function(fileName)
 	{
 		if (e.code === 'ENOENT')
 			console.log(colors.error + "Error! "
-				+ colors.reset + "-" + fileName + "- does not exist!");
+				+ colors.reset + fileName + " does not exist!");
 		else if (e.code === 'EACCES')
 			console.log(colors.error + "Error! "
 				+ colors.reset + "No permission to access " + fileName);
