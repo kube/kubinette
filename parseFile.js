@@ -5,16 +5,21 @@
 function	checkFunction(name, data, i, fileInfo)
 {
 	// This Regex still doesn't match functions as parameters
-	var isFunctionRegex = /^([\t\s]*)([0-9a-zA-Z_]+ )?([0-9a-zA-Z_]+)([\t\s]+)(\**)([\t\s]+)?([0-9a-zA-Z_]+)\(((([0-9a-zA-Z_]+ )?([0-9a-zA-Z_]+)([\t\s]+)?(\**)([\t\s]+)?([0-9a-zA-Z_]+)(?:, ))*(([0-9a-zA-Z_]+ )?([0-9a-zA-Z_]+)([\t\s]+)?(\**)([\t\s]+)?([0-9a-zA-Z_]+)))?\)[\t\s]*(?!;)(?:{)?/mgi;
+	// var isFunctionRegex = /^([\t\s]*)([0-9a-zA-Z_]+ )?([0-9a-zA-Z_]+)([\t\s]+)(\**)([\t\s]+)?([0-9a-zA-Z_]+)\(((([0-9a-zA-Z_]+ )?([0-9a-zA-Z_]+)([\t\s]+)?(\**)([\t\s]+)?([0-9a-zA-Z_]+)(?:, ))*(([0-9a-zA-Z_]+ )?([0-9a-zA-Z_]+)([\t\s]+)?(\**)([\t\s]+)?([0-9a-zA-Z_]+)))?\)[\t\s]*(?!;)(?:{)?/mgi;
 
-	var argFunctionRegex = /[0-9a-zA-Z_]+[\t\s]*\*?\(\*?[0-9a-zA-Z_]+[\t\s]*\)\((([0-9a-zA-Z_]+)[\t\s]+(\**)([\t\s]*)([0-9a-zA-Z_]+),)*[\t\s]([0-9a-zA-Z_]+)([\t\s]+)(\**)([0-9a-zA-Z_]+)\)/mgi;
+		// STILL BUGGY
+	var	isFunctionRegex = /^([\s]*[a-z_A-Z1-9\-_]+){1,4}[\*\t ]*[\t ]+[\*\t ]*[a-z_A-Z1-9\-_]+\(/mgi;
+
+	// var argFunctionRegex = /[0-9a-zA-Z_]+[\t\s]*\*?\(\*?[0-9a-zA-Z_]+[\t\s]*\)\((([0-9a-zA-Z_]+)[\t\s]+(\**)([\t\s]*)([0-9a-zA-Z_]+),)*[\t\s]([0-9a-zA-Z_]+)([\t\s]+)(\**)([0-9a-zA-Z_]+)\)/mgi;
 
 	var isFunction = data[i].match(isFunctionRegex);
 	// Should check umcompleteFunctionPrototypeRegex FIRST!
 	if (isFunction)
 	{
 		if (kubinette.detailedMode)
-			console.log(data[i]);
+		{
+			fileInfo.log(isFunction[0]);
+		}
 		data[i].isFunctionStart = 1;
 		fileInfo.functionsCount++;
 	}
@@ -30,7 +35,7 @@ function	checkTrailingWhitespaces(data, i, fileInfo)
 	if (trailingWhitespaces)
 	{
 		fileInfo.errorsCount++;
-		console.log(colors.error + "Line " + i + ": Trailing whitespaces" + colors.reset)
+		fileInfo.log(colors.error + "Line " + i + ": Trailing whitespaces" + colors.reset);
 	}
 }
 
@@ -44,9 +49,9 @@ function	checkEmptyLines(data, i, fileInfo)
 	{
 		data[i].isEmptyLine = true;
 		if (i > 0 && data[i - 1].isEmptyLine)
-		{	
+		{
 			fileInfo.errorsCount++;
-			console.log(colors.error + "Line " + (i - 1) + ": Multiple empty lines." + colors.reset)
+			fileInfo.log(colors.error + "Line " + (i - 1) + ": Multiple empty lines." + colors.reset);
 		}
 	}
 }
@@ -59,34 +64,41 @@ function	checkEndFileReturn(data, i, fileInfo)
 	if (!endFileReturn)
 	{
 		fileInfo.errorsCount++;
-		fileInfo.errorsLog += colors.error + "Missing carriage return at end of file" + colors.reset;
+		fileInfo.log(colors.error + "Missing carriage return at end of file" + colors.reset);
 	}
 }
 
 function	displayFunctionsCount(fileInfo, data)
 {
+	if (kubinette.detailedMode)
+		console.log("-----------");
+	if (fileInfo.errorsCount == 0 && fileInfo.functionsCount <= 5 && fileInfo.functionsCount > 0)
+		process.stdout.write(colors.positive + "✔ " + colors.reset);
+	else
+		process.stdout.write(colors.error + "✘ " + colors.reset);
+	console.log(colors.discrete + fileInfo.name + colors.reset);
+	process.stdout.write(fileInfo.checkLog);
 	if (!fileInfo.functionsCount)
-		process.stdout.write(colors.error + "\nThere is no function in the file." + colors.reset);
+		process.stdout.write(colors.error + "There is no function in the file.\n" + colors.reset);
 	else if (fileInfo.functionsCount > 5)
 		console.error(colors.error + fileInfo.functionsCount + " functions in file!" + colors.reset);
 	else if (kubinette.detailedMode)
 		console.log(colors.positive + fileInfo.functionsCount + " functions in file." + colors.reset);
-	if (fileInfo.errorsCount == 0 && fileInfo.functionsCount <= 5 && fileInfo.functionsCount > 0)
-		console.log(colors.positive + " ✔" + colors.reset);
-	else
-		console.log(colors.error + " ✘" + colors.reset);
 }
-
 
 function	parseFile(name, data)
 {
 	// if (kubinette.visualMode)
-	process.stdout.write(colors.discrete + name + colors.reset);
 	var data = data.split('\n');
 	var	fileInfo = new Array();
+	fileInfo.name = name;
 	fileInfo.functionsCount = 0;
 	fileInfo.errorsCount = 0;
-	fileInfo.errorsLog = new String;
+	fileInfo.checkLog = "";
+	fileInfo.log = function (text)
+	{
+		this.checkLog += text + "\n";
+	}
 
 	for (var i in data)
 	{

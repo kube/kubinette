@@ -17,13 +17,11 @@ argsFunctions["--help"] = function()
 
 argsFunctions["--visual"] = function()
 {
-	console.log("Enable Visual Mode");
 	kubinette.visualMode = 1;
 };
 
 argsFunctions["--detailed"] = function()
 {
-	console.log("Enable Detailed Mode");
 	kubinette.detailedMode = 1;
 };
 
@@ -36,14 +34,17 @@ argsFunctions["-h"] = argsFunctions["--help"];
 
 function			isArgument(argument)
 {
-	if (argument.match(/^--/g))
+	if (argument.match(/^-/g))
 	{
 		if (!checkedArgs[argument])
 		{
 			if (validArgs.indexOf(argument) > -1)
 				argsFunctions[argument]();
 			else
+			{
 				console.error("Invalid argument " + argument);
+				process.exit();
+			}
 		}
 		checkedArgs[argument] = 1;
 		return (1);
