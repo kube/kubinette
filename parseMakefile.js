@@ -2,24 +2,20 @@
 **	Makefile Parser
 */
 
-function	parseMakefile()
+var parseMakefile = function(callback)
 {
-	if (fs.existsSync('Makefile'))
+	//	Should Check if Makefile exists FIRST !
+	var	getFilesRegex = /([a-z_]+\/)*[a-z_]+\.c/gi;
+	var	child = exec("make -Bn", function (error, stdout, stderr)
 	{
-		console.log(colors.error + "Experimental Makefile Parser" + colors.reset);
-		fs.readFile('Makefile', 'utf8', function (err, data)
+		var sourcesFiles = stdout.match(getFilesRegex);
+		if (error !== null)
 		{
-			if (err)
-				return (console.log(err));
-			var	getMakefileSourcesRegex = /([\t]*([a-z]+\/)*[a-z_.]*[\t]*\\\n)+/mgi;
-			var	sourcesFiles = data.match(getMakefileSourcesRegex);
-			sourcesFiles = sourcesFiles.join('\\').replace(/[\t\s\n ]*/mgi, "").split(/\\+/);
-			for (var i in sourcesFiles)
-				kubinette.loadFile(sourcesFiles[i]);
-		});
-	}
-	else
-		console.error(colors.error + "No Makefile in current directory." + colors.reset);
+			console.log('exec error: ' + error);
+		}
+		for (var i in sourcesFiles)
+			kubinette.loadFile(sourcesFiles[i]);	
+	});
 }
 
 module.exports = parseMakefile;

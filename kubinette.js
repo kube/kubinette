@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 fs 		= require("fs");
+sys		= require("sys");
+exec	= require("child_process").exec;
 colors 	= require("./colors.js");
 
 kubinette				= new Array();

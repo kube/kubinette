@@ -7,8 +7,8 @@ function	checkFunction(name, data, i, fileInfo)
 	// This Regex still doesn't match functions as parameters
 	// var isFunctionRegex = /^([\t\s]*)([0-9a-zA-Z_]+ )?([0-9a-zA-Z_]+)([\t\s]+)(\**)([\t\s]+)?([0-9a-zA-Z_]+)\(((([0-9a-zA-Z_]+ )?([0-9a-zA-Z_]+)([\t\s]+)?(\**)([\t\s]+)?([0-9a-zA-Z_]+)(?:, ))*(([0-9a-zA-Z_]+ )?([0-9a-zA-Z_]+)([\t\s]+)?(\**)([\t\s]+)?([0-9a-zA-Z_]+)))?\)[\t\s]*(?!;)(?:{)?/mgi;
 
-		// STILL BUGGY
-	var	isFunctionRegex = /^([\s]*[a-z_A-Z1-9\-_]+){1,4}[\*\t ]*[\t ]+[\*\t ]*[a-z_A-Z1-9\-_]+\(/mgi;
+	// NEW MATCHING FUNCTION REGEX
+	var	isFunctionRegex = /^([\s]*[a-z_A-Z1-9\-_]+){1,4}[\*\t ]*[\t\s]+[\*\t ]*[a-z_A-Z1-9\-_]+[\s]*\(/mgi;
 
 	// var argFunctionRegex = /[0-9a-zA-Z_]+[\t\s]*\*?\(\*?[0-9a-zA-Z_]+[\t\s]*\)\((([0-9a-zA-Z_]+)[\t\s]+(\**)([\t\s]*)([0-9a-zA-Z_]+),)*[\t\s]([0-9a-zA-Z_]+)([\t\s]+)(\**)([0-9a-zA-Z_]+)\)/mgi;
 

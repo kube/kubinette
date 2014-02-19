@@ -27,7 +27,6 @@ argsFunctions["--detailed"] = function()
 
 
 // Aliases
-
 argsFunctions["-d"] = argsFunctions["--detailed"];
 argsFunctions["-v"] = argsFunctions["--visual"];
 argsFunctions["-h"] = argsFunctions["--help"]; 
